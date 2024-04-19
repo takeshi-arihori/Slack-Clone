@@ -1,19 +1,19 @@
 import React from 'react';
-import { signInWithGoogle } from "../features/auth/Auth";
-import { getUser } from "../features/user/userAPI";
+import { useAppDispatch } from "../app/hooks";
+import { googleSignInAndUserSetup, login } from "../features/user/userSlice";
 
 const Login = () => {
-    const getUserInfo = async () => {
-        try {
-            const user = await getUser("RlDUXRLYIWInHIML4FOg");
-            if (user) {
-                console.log(user);
-            }
-        } catch (error) {
-            console.error('Login failed:', error);
-        }
-    }
+    const dispatch = useAppDispatch();
 
+    const loginWithGoogle = () => {
+        googleSignInAndUserSetup().then(
+            (userId) => {
+                if (userId) {
+                    dispatch(login(userId))
+                }
+            }
+        )
+    }
     return (
         <div className="fixed flex inset-0 items-center justify-center bg-gray-500">
             <div className="w-full max-w-xs">
@@ -24,7 +24,7 @@ const Login = () => {
                     <div className="flex items-center justify-center">
                         <button
                             className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            onClick={getUserInfo}>
+                            onClick={loginWithGoogle}>
                             ログイン
                         </button>
                     </div>
